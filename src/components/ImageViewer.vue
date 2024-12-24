@@ -26,7 +26,7 @@
   
       // 动态加载图片
       const loadRandomImages = () => {
-        const images = import.meta.glob("@/assets/test_images/*.jpg", { eager: true });
+        const images = import.meta.glob("src/assets/test_images/*.jpg", { eager: true });
         const allImages = Object.keys(images);
   
         // 随机选择三张图片
