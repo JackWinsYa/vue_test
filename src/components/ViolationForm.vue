@@ -73,7 +73,7 @@
         <!-- 右半邊按鈕 -->
         <div class="flex-1 flex flex-col justify-center space-y-4 pl-4">
           <button
-            @click="showModal = true"
+            @click="showModal = true; drawImageOnCanvas()"
             class="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg"
           >
             預覽罰單
@@ -106,18 +106,14 @@
         >
           關閉
         </button>
-        <img
-          src="@/assets/images/Jufa_tongzhidan.jpg"
-          alt="罰單預覽"
-          class="max-w-full max-h-[80vh] rounded-md"
-        />
+        <canvas ref="previewCanvas" class="max-w-full max-h-[80vh] rounded-md"></canvas>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, watch } from "vue";
 
 export default {
   setup() {
@@ -130,6 +126,7 @@ export default {
 
     const currentTime = ref("");
     const showModal = ref(false);
+    const previewCanvas = ref(null);
 
     const updateTime = () => {
       const now = new Date();
@@ -151,12 +148,39 @@ export default {
       alert(`提交成功！\n時間：${currentTime.value}\n舉發 ID：${formData.serialNumber}`);
     };
 
+    const drawImageOnCanvas = () => {
+      if (previewCanvas.value) {
+        const canvas = previewCanvas.value;
+        const ctx = canvas.getContext("2d");
+        const image = new Image();
+        image.src = require("@/assets/images/Jufa_tongzhidan.jpg");
+        image.onload = () => {
+          canvas.width = 1000; // 確保畫布大小與需求一致
+          canvas.height = 1400;
+          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+          // 在駕駛人姓名欄位寫入舉發 ID
+          ctx.font = "20px Arial";
+          ctx.fillStyle = "black";
+          ctx.fillText(`舉發 ID: ${formData.serialNumber}`, 150, 300);
+
+          // 在車牌號碼欄位寫入車牌號碼
+          ctx.fillText(`車牌號碼: ${formData.licensePlate}`, 150, 350);
+
+          // 在違規事實欄位寫入違規事實
+          ctx.fillText(`違規事實: ${formData.violationFact}`, 150, 400);
+        };
+      }
+    };
+
     return {
       formData,
       currentTime,
       resetForm,
       submitForm,
       showModal,
+      previewCanvas,
+      drawImageOnCanvas,
     };
   },
 };
@@ -168,4 +192,3 @@ export default {
   max-width: 100%; /* 確保圖片適應左側寬度 */
 }
 </style>
-
