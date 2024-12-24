@@ -1,19 +1,20 @@
 <template>
     <div class="flex-1 bg-gray-800 rounded-lg border border-gray-700 p-4 m-4">
-      <h2 class="text-xl font-semibold text-white mb-4">車牌照片</h2>
-      <div class="image-container rounded-lg border border-gray-600">
-        <img :src="currentImage" :alt="'車牌照片 ' + (currentImageIndex + 1)" class="w-full h-full object-contain">
-      </div>
-      <div class="flex gap-2 justify-center mt-4">
-        <!-- 切換圖片按鈕 -->
-        <button @click="prevImage" class="p-2 rounded bg-gray-600 hover:bg-gray-700 text-white">
-          <i class="fas fa-chevron-left text-xl"></i>
-        </button>
-        <button @click="nextImage" class="p-2 rounded bg-gray-600 hover:bg-gray-700 text-white">
-          <i class="fas fa-chevron-right text-xl"></i>
-        </button>
-      </div>
-    </div>
+  <h2 class="text-xl font-semibold text-white mb-4">車牌照片</h2>
+  <div class="image-container rounded-lg border border-gray-600">
+    <img :src="currentImage" :alt="'車牌照片 ' + (currentImageIndex + 1)" class="w-full h-full object-contain">
+    {{ currentImage }} <!-- 檢查 currentImage 的值 -->
+  </div>
+  <div class="flex gap-2 justify-center mt-4">
+    <!-- 切換圖片按鈕 -->
+    <button @click="prevImage" class="p-2 rounded bg-gray-600 hover:bg-gray-700 text-white">
+      <i class="fas fa-chevron-left text-xl"></i>
+    </button>
+    <button @click="nextImage" class="p-2 rounded bg-gray-600 hover:bg-gray-700 text-white">
+      <i class="fas fa-chevron-right text-xl"></i>
+    </button>
+  </div>
+</div>
   </template>
   
   <script>
@@ -24,15 +25,16 @@
       const currentImageIndex = ref(0);
       const randomImages = ref([]);
   
-      // 动态加载图片
       const loadRandomImages = () => {
-        const images = import.meta.glob("src/assets/test_images/*.jpg", { eager: true });
-        const allImages = Object.keys(images);
-  
-        // 随机选择三张图片
-        const shuffled = allImages.sort(() => 0.5 - Math.random());
-        randomImages.value = shuffled.slice(0, 3);
-      };
+  const images = import.meta.glob("src/assets/test_images/*.jpg", { eager: true });
+  console.log(images); // 檢查加載的圖片
+  const allImages = Object.keys(images);
+
+  // 隨機選擇三張圖片
+  const shuffled = allImages.sort(() => 0.5 - Math.random());
+  randomImages.value = shuffled.slice(0, 3);
+  console.log(randomImages.value); // 檢查隨機選擇的圖片
+};
   
       const currentImage = computed(() => randomImages.value[currentImageIndex.value]);
   
