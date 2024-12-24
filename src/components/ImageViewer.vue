@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-1 bg-gray-800 rounded-lg border border-gray-700 p-4 m-4">
+   <div class="flex-1 bg-gray-800 rounded-lg border border-gray-700 p-4 m-4">
   <h2 class="text-xl font-semibold text-white mb-4">車牌照片</h2>
   <div class="image-container rounded-lg border border-gray-600">
     <img :src="currentImage" :alt="'車牌照片 ' + (currentImageIndex + 1)" class="w-full h-full object-contain">
@@ -25,10 +25,16 @@
       const currentImageIndex = ref(0);
       const randomImages = ref([]);
   
-      const loadRandomImages = () => {
-  const images = import.meta.glob("src/assets/test_images/*.jpg", { eager: true });
+   const loadRandomImages = () => {
+  const images = import.meta.glob("/src/assets/test_images/*.jpg", { eager: true });
   console.log(images); // 檢查加載的圖片
   const allImages = Object.keys(images);
+  console.log(allImages); // 檢查所有圖片的路徑
+
+  if (allImages.length === 0) {
+    console.error('No images found in src/assets/test_images');
+    return;
+  }
 
   // 隨機選擇三張圖片
   const shuffled = allImages.sort(() => 0.5 - Math.random());
